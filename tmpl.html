@@ -1,0 +1,40 @@
+<html>
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+
+<form style="display:none">
+    输入密码以查看本页内容:
+    <input type="text" id="password">
+    <button type="submit">提交</button>
+</form>
+<script>{sjcl.js}</script>
+<script>var data = '{encryptedData}';</script>
+<script>
+function decryptAndShow(password) {
+    if (password === '') {
+        return;
+    }
+    try {
+        document.body.innerHTML = sjcl.decrypt(password, data);
+    } catch (e) {
+        alert('密码不对');
+    }
+}
+
+var uriPassword = location.search.match(/[?&]password=([^&]+)/);
+if (uriPassword) {
+    decryptAndShow(uriPassword[1]);
+} else {
+    var form = document.forms[0];
+    form.style = '';
+    form.onsubmit = function (e) {
+        e.preventDefault();
+        decryptAndShow(document.getElementById('password').value);
+    };
+}
+</script>
+
+</body>
+</html>
